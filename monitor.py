@@ -26,16 +26,21 @@ PORTS = {"ATH": "Афіни/Пірей", "PIR": "Пірей", "CYP": "Кіпр",
 
 def notify(text):
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
-    chat = os.environ.get("TELEGRAM_CHAT_ID")
-    if not token or not chat:
+    chats = [c.strip() for c in os.environ.get("TELEGRAM_CHAT_ID", "").split(",") if c.strip()]
+    if not token or not chats:
         print("[!] Telegram не налаштовано, повідомлення лише в консоль:\n" + text)
         return
-    data = urllib.parse.urlencode(
-        {"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": "true"}
-    ).encode()
-    req = urllib.request.Request(f"https://api.telegram.org/bot{token}/sendMessage", data=data)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        r.read()
+    for chat in chats:
+        data = urllib.parse.urlencode(
+            {"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": "true"}
+        ).encode()
+        req = urllib.request.Request(f"https://api.telegram.org/bot{token}/sendMessage", data=data)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                r.read()
+        except Exception as e:
+            # один недоступний одержувач не має зривати сповіщення решті
+            print(f"[!] Не вдалося надіслати в чат {chat}: {e}")
 
 
 def _set_select(page, sel, val):
