@@ -154,7 +154,9 @@ def main():
     ap.add_argument("--watch", default=os.environ.get("WATCH", "pax"),
                     help="категорії через кому: pax,cabin,vehicle")
     ap.add_argument("--list-days", action="store_true", help="показати дні з рейсами і вийти")
-    ap.add_argument("--always-notify", action="store_true", help="слати звіт щоразу, не лише при зміні")
+    ap.add_argument("--always-notify", action="store_true",
+                    default=os.environ.get("ALWAYS_NOTIFY", "").lower() == "true",
+                    help="слати звіт щоразу, не лише при зміні")
     ap.add_argument("--headed", action="store_true")
     args = ap.parse_args()
 
