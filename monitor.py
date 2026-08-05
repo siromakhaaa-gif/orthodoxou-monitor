@@ -184,15 +184,21 @@ def main():
         browser.close()
 
     old = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {}
-    alerts, report = [], []
+    alerts, report, broke, fixed = [], [], [], []
 
     for key, res in results.items():
         route, ds = key.split(":")
         frm, to = route.split(">")
-        head = f"<b>{PORTS.get(frm, frm)} → {PORTS.get(to, to)}, {ds}</b>"
+        label = f"{PORTS.get(frm, frm)} → {PORTS.get(to, to)}, {ds}"
+        head = f"<b>{label}</b>"
+        was_error = bool((old.get(key) or {}).get("error"))
         if res.get("error"):
             report.append(f"{head}\n   ⚠️ {res['error']}")
+            if not was_error:
+                broke.append(f"{label}: {res['error']}")
             continue
+        if was_error:
+            fixed.append(label)
         if not res.get("trips"):
             report.append(f"{head}\n   — рейсів немає")
             continue
@@ -209,6 +215,15 @@ def main():
                         f"{t['vessel']} {t['dep']}→{t['arr']} · {t['price']}\n"
                         f"{CAT_LABELS[cat]}: <b>{LEVELS_BY_CODE[now]}</b>\n{BASE}"
                     )
+
+    if broke:
+        alerts.append(
+            "⚠️ <b>Перевірка не проходить</b>\n" + "\n".join(broke) +
+            "\n\nСайт міг змінитися або бути тимчасово недоступним. Поки це так, "
+            "тиша від бота НЕ означає, що місць немає."
+        )
+    if fixed:
+        alerts.append("✅ <b>Перевірка знову працює</b>\n" + "\n".join(fixed))
 
     STATE_FILE.write_text(json.dumps(results, ensure_ascii=False, indent=1))
 
