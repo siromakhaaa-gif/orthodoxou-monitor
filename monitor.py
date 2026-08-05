@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -26,7 +27,8 @@ PORTS = {"ATH": "Афіни/Пірей", "PIR": "Пірей", "CYP": "Кіпр",
 
 def notify(text):
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
-    chats = [c.strip() for c in os.environ.get("TELEGRAM_CHAT_ID", "").split(",") if c.strip()]
+    # ID вписують руками у веб-форму, тому приймаємо кому, крапку з комою, пробіл і новий рядок
+    chats = [c for c in re.split(r"[,;\s]+", os.environ.get("TELEGRAM_CHAT_ID", "")) if c]
     if not token or not chats:
         print("[!] Telegram не налаштовано, повідомлення лише в консоль:\n" + text)
         return
