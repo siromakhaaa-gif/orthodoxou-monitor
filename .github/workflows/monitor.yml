@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "*/30 * * * *"
   workflow_dispatch:
+    inputs:
+      always_notify:
+        description: "Надіслати звіт навіть якщо змін немає"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -34,6 +39,7 @@ jobs:
           ROUTE_TO: CYP
           DATES: "2026-08-24,2026-08-27"
           WATCH: pax,cabin
+          ALWAYS_NOTIFY: ${{ inputs.always_notify }}
         run: python monitor.py
 
       - name: Save state
