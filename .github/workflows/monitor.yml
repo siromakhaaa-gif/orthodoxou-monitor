@@ -37,7 +37,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           ROUTE_FROM: ATH
           ROUTE_TO: CYP
-          DATES: "2026-08-24,2026-08-27"
+          DATES: "2026-08-20,2026-08-24,2026-08-27"
           WATCH: pax,cabin
           ALWAYS_NOTIFY: ${{ inputs.always_notify }}
         run: python monitor.py
