@@ -1,4 +1,19 @@
 {
+ "ATH>CYP:2026-08-20": {
+  "trips": [
+   {
+    "vessel": "MARINA",
+    "dep": "04:00",
+    "arr": "11:00",
+    "price": "41.08€",
+    "status": {
+     "pax": "none",
+     "vehicle": "ok",
+     "cabin": "none"
+    }
+   }
+  ]
+ },
  "ATH>CYP:2026-08-24": {
   "trips": [
    {
