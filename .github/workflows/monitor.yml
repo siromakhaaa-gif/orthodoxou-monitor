@@ -49,3 +49,20 @@ jobs:
           git add state.json
           git diff --staged --quiet || git commit -m "state: $(date -u +%FT%TZ)"
           git push
+
+      # Якщо впав сам запуск, monitor.py не встиг нічого надіслати — пишемо звідси
+      - name: Notify on failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          text="⚠️ Перевірка порону впала повністю — сповіщення про місця зараз не працюють.
+          Журнал: $RUN_URL"
+          for chat in $(printf '%s' "$TELEGRAM_CHAT_ID" | tr ',;' '\n\n'); do
+            [ -n "$chat" ] || continue
+            curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+              --data-urlencode "chat_id=$chat" \
+              --data-urlencode "text=$text" -o /dev/null
+          done
