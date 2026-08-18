@@ -10,9 +10,9 @@
     "arr": "08:00",
     "price": "41.08€",
     "status": {
-     "pax": "none",
-     "vehicle": "none",
-     "cabin": "none"
+     "pax": "unknown",
+     "vehicle": "unknown",
+     "cabin": "unknown"
     }
    }
   ]
