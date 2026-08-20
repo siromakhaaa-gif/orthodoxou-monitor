@@ -4,19 +4,7 @@
   "note": "рейсів немає"
  },
  "ATH>CYP:2026-08-24": {
-  "trips": [
-   {
-    "vessel": "MARINA",
-    "dep": "01:00",
-    "arr": "08:00",
-    "price": "41.08€",
-    "status": {
-     "pax": "none",
-     "vehicle": "none",
-     "cabin": "none"
-    }
-   }
-  ]
+  "error": "сторінка результатів не завантажилась"
  },
  "ATH>CYP:2026-08-27": {
   "trips": [
